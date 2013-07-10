@@ -1,0 +1,58 @@
+install Library ".DEFAULT" [
+  (* Target *)
+  Name		"dbg";
+  Description	"Debug library";
+  Version	"0.1";
+
+  (* Sources *)
+  Sources [
+    "stacktrace/dlbfd/dlbfd_ctor.cpp";
+    "stacktrace/dlbfd/dlbfd_dtor.cpp";
+    "stacktrace/dlbfd/load_bfd.cpp";
+
+    "stacktrace/backtrace_symbols.cpp";
+    "stacktrace/check_bfd.cpp";
+    "stacktrace/find_address_in_section.cpp";
+    "stacktrace/find_matching_file.cpp";
+    "stacktrace/process_file.cpp";
+    "stacktrace/read_symtab.cpp";
+    "stacktrace/resolve_frame.cpp";
+    "stacktrace/resolve_frame_internal.cpp";
+    "stacktrace/stacktrace_ctor.cpp";
+    "stacktrace/stacktrace_dtor.cpp";
+    "stacktrace/translate_addresses.cpp";
+
+    "backtrace.cpp";
+    "backtrace_frontend.cpp";
+    "demangle.cpp";
+    "fork_abort.cpp";
+    "fork_trace.cpp";
+    "signal_handler.cpp";
+    "undname.cpp";
+    "xassert.cpp";
+  ];
+
+  Headers [
+    "array_size.h";
+    "backtrace.h";
+    "common.h";
+    "demangle.h";
+    "force_assign.h";
+    "log.h";
+    "phoenix.h";
+    "signal_handler.h";
+    "trace.h";
+    "xassert.h";
+    "stacktrace/dlbfd.h";
+    "stacktrace/file_match.h";
+    "stacktrace/frame.h";
+    "stacktrace/stacktrace.h";
+  ];
+
+  CRequires [
+    "dl";
+  ];
+
+  Var ("OM_CPPFLAGS", "-I$(dir .)");
+  Recurse ("stacktrace stacktrace/dlbfd");
+]
