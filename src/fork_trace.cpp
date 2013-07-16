@@ -26,16 +26,16 @@
 
 typedef decltype (user_regs_struct::eflags) word_t;
 
-word_t stack_end;
+stack_word_t stack_end;
 
 static pid_t child;
 
-#if __WORDSIZE == 64
-static word_t (user_regs_struct::*bp) = &user_regs_struct::rbp;
-static word_t (user_regs_struct::*sp) = &user_regs_struct::rsp;
-#else
+#if __i386__
 static word_t (user_regs_struct::*bp) = &user_regs_struct::ebp;
 static word_t (user_regs_struct::*sp) = &user_regs_struct::esp;
+#elif __x86_64__
+static word_t (user_regs_struct::*bp) = &user_regs_struct::rbp;
+static word_t (user_regs_struct::*sp) = &user_regs_struct::rsp;
 #endif
 
 template<typename T>
@@ -119,7 +119,7 @@ backtrace (word_t lastbp, word_t lastesp)
     {
       if (false
           || word_t (bp.xbp) < lastesp
-          || word_t (bp.xbp) > stack_end
+          || (stack_end > 0 && word_t (bp.xbp) > stack_end)
           || word_t (bp.xbp) & 3)
         break;
 
@@ -279,8 +279,6 @@ start_inspector ()
 bool
 fork_trace ()
 {
-  xassert (stack_end != 0);
-
   child = fork ();
   if (child == 0)
     {

@@ -7,20 +7,22 @@
 BEGIN_DECLS
 
 #ifdef __i386__
-extern VISIBLE long stack_end;
-#else
-extern VISIBLE unsigned long long stack_end;
+typedef long stack_word_t;
+#elif defined (__x86_64__)
+typedef unsigned long stack_word_t;
 #endif
+
+extern VISIBLE stack_word_t stack_end;
 
 VISIBLE bool fork_trace ();
 VISIBLE void fork_abort (char const *msg);
 
 END_DECLS
 
-#if __WORDSIZE == 64
+#ifdef __i386__
 # define init_debug()    \
-   asm ("movq %%rbp, %0" : "=a" (stack_end));
-#else
+   __asm__ ("movq %%rbp, %0" : "=a" (stack_end))
+#elif defined (__x86_64__)
 # define init_debug()    \
-   asm ("movl %%ebp, %0" : "=a" (stack_end));
+   __asm__ ("movl %%ebp, %0" : "=a" (stack_end))
 #endif
