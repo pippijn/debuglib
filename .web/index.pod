@@ -1,0 +1,7 @@
+=head1 Debug library
+
+C++ code does not generally support stack traces like Java and other languages
+do. This library aims to bring convenient and expressive debug traces and
+utilities to C and C++ applications.
+
+L<Git repository|https://github.com/pippijn/debuglib>
